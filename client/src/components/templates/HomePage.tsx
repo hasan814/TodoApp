@@ -37,34 +37,34 @@ const HomePage = () => {
 
   // ============ Rendering =============
   return (
-    <div className="max-w-4xl mx-auto sm:mt-8 p-4">
-      <h2 className="text-center text-3xl font-bold mb-6 text-gray-800">
+    <div className="max-w-4xl mx-auto mt-4 sm:mt-8 p-4">
+      <h2 className="text-center text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-gray-800">
         Personal Todo App
       </h2>
-      <div className="flex items-center justify-center gap-4 mb-4">
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-4">
         <input
           type="text"
           value={newTodoText}
           placeholder="Add Todo"
           onChange={(event) => setNewTodoText(event.target.value)}
-          className="w-full sm:w-96 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:outline-none"
+          className="flex-grow w-full sm:w-96 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:outline-none"
         />
         <button
           onClick={addTodoHandler}
-          className="bg-indigo-600 text-white p-3 rounded-md shadow-md hover:bg-indigo-500"
+          className="bg-indigo-600 text-white p-3 rounded-md shadow-md hover:bg-indigo-500 w-full sm:w-auto"
         >
-          <BsPlus className="w-6 h-6" />
+          <BsPlus className="w-6 h-6 mx-auto" />
         </button>
       </div>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-wrap justify-between items-center gap-2 sm:gap-4 mb-6">
         <FilterBtn />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <input
             type="text"
             value={searchTerm}
             placeholder="Search..."
             onChange={(event) => searchHandler(event.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:outline-none"
+            className="flex-grow px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:outline-none"
           />
           <button className="bg-gray-200 p-2 rounded-md shadow-md hover:bg-gray-300">
             <BsSearch className="w-5 h-5" />
