@@ -3,41 +3,36 @@
 import { addTodo, updateSearchTerm } from "@/redux/actions";
 import { BsPlus, BsSearch } from "react-icons/bs";
 import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/types/store";
 import { useState } from "react";
 
 import FilterBtn from "../modules/FilterBtn";
 import TodoList from "../modules/TodoList";
 
 const HomePage = () => {
-  // ============ Dispatch =============
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
-  // ============ State =============
-  const [newTodoTitle, setNewTodoTitle] = useState("");
-  const [newTodoDescription, setNewTodoDescription] = useState(""); // New state for description
-  const [searchTerm, setSearchTerm] = useState("");
+  const [newTodoTitle, setNewTodoTitle] = useState<string>("");
+  const [newTodoDescription, setNewTodoDescription] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // ============  Function =============
-  const addHandler = (title, description) => {
+  const addHandler = (title: string, description: string) => {
     dispatch(addTodo(title, description));
   };
 
-  // ============ Add Function =============
   const addTodoHandler = () => {
     if (newTodoTitle.trim() !== "") {
       addHandler(newTodoTitle.trim(), newTodoDescription.trim());
       setNewTodoTitle("");
-      setNewTodoDescription(""); // Clear the description field as well
+      setNewTodoDescription("");
     }
   };
 
-  // ============ Search Function =============
-  const searchHandler = (value) => {
+  const searchHandler = (value: string) => {
     setSearchTerm(value);
     dispatch(updateSearchTerm(value));
   };
 
-  // ============ Rendering =============
   return (
     <div className="max-w-4xl mx-auto mt-4 sm:mt-8 p-4">
       <h2 className="text-center text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-gray-800">
@@ -56,7 +51,7 @@ const HomePage = () => {
         <input
           type="text"
           value={newTodoDescription}
-          placeholder="Add Todo Description" // New input for description
+          placeholder="Add Todo Description"
           onChange={(event) => setNewTodoDescription(event.target.value)}
           className="flex-grow w-full sm:w-96 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:outline-none mt-2 sm:mt-0"
         />

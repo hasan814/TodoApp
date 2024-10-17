@@ -1,23 +1,21 @@
+"use client";
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   filterTodo,
   markAllCompleted,
   markAllIncompleted,
 } from "@/redux/actions";
+import { AppDispatch } from "@/types/store";
 
 const FilterBtn = () => {
-  // ============= Dispatch ==============
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
+  const currentFilter = useSelector((state: any) => state.filter);
 
-  // ============= Selector ==============
-  const currentFilter = useSelector((state) => state.filter);
-
-  // ============= Filter Function ==============
-  const filterHandler = (filter) => {
+  const filterHandler = (filter: string) => {
     dispatch(filterTodo(filter));
   };
 
-  // ============= Rendering ==============
   return (
     <div className="flex items-center gap-4">
       <select

@@ -1,17 +1,18 @@
 "use client";
 
-import { useSelector } from "react-redux";
-import TodoItem from "./TodoItem";
 import { createSelector } from "reselect";
+import { useSelector } from "react-redux";
+import { Todo } from "@/types";
 
-// Memoized selector using reselect
+import TodoItem from "./TodoItem";
+
 const selectFilteredTodos = createSelector(
   [
-    (state) => state.todos,
-    (state) => state.filter,
-    (state) => state.searchTerm,
+    (state: any) => state.todos,
+    (state: any) => state.filter,
+    (state: any) => state.searchTerm,
   ],
-  (todos, filter, searchTerm) => {
+  (todos: Todo[], filter: string, searchTerm: string) => {
     return todos.filter((todo) => {
       const matchesFilter =
         (filter === "COMPLETED" && todo.completed) ||
@@ -26,7 +27,6 @@ const selectFilteredTodos = createSelector(
 );
 
 const TodoList = () => {
-  // Use the memoized selector
   const filteredTodos = useSelector(selectFilteredTodos);
 
   return (

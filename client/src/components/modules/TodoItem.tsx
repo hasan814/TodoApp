@@ -1,6 +1,7 @@
 "use client";
 
 import { useDispatch } from "react-redux";
+import { useState } from "react";
 import {
   makeCompleted,
   makeIncompleted,
@@ -17,20 +18,23 @@ import {
   FaToggleOn,
   FaTrash,
 } from "react-icons/fa";
-import { useState } from "react";
+import { Todo } from "@/types";
+import { AppDispatch } from "@/types/store";
 
-const TodoItem = ({ todo, index }) => {
-  // ================ Dispatch ================
-  const dispatch = useDispatch();
+interface TodoItemProps {
+  todo: Todo;
+  index: number;
+}
 
-  // ================ State ================
-  const [isEditing, setIsEditing] = useState(false);
-  const [updatedText, setUpdatedText] = useState(todo.text);
-  const [updatedDescription, setUpdatedDescription] = useState(
+const TodoItem = ({ todo }: TodoItemProps) => {
+  const dispatch: AppDispatch = useDispatch();
+
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [updatedText, setUpdatedText] = useState<string>(todo.text);
+  const [updatedDescription, setUpdatedDescription] = useState<string>(
     todo.description || ""
   );
 
-  // ================ Handlers ================
   const updateHandler = () => {
     if (updatedText.trim() !== "" && updatedDescription.trim() !== "") {
       dispatch(
@@ -39,7 +43,7 @@ const TodoItem = ({ todo, index }) => {
       setIsEditing(false);
     }
   };
-  // ================ Rendering ================
+
   return (
     <li className="flex items-center justify-between p-4 bg-white rounded-md shadow-md">
       {isEditing ? (
