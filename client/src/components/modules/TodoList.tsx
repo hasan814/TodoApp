@@ -2,23 +2,22 @@
 
 import { createSelector } from "reselect";
 import { useSelector } from "react-redux";
-import { Todo } from "@/types";
-
+import { RootState } from "@/redux/store";
 import TodoItem from "./TodoItem";
 
 const selectFilteredTodos = createSelector(
   [
-    (state: any) => state.todos,
-    (state: any) => state.filter,
-    (state: any) => state.searchTerm,
+    (state: RootState) => state.todos.todos,
+    (state: RootState) => state.todos.filter,
+    (state: RootState) => state.todos.searchTerm,
   ],
-  (todos: Todo[], filter: string, searchTerm: string) => {
+  (todos, filter, searchTerm) => {
     return todos.filter((todo) => {
       const matchesFilter =
         (filter === "COMPLETED" && todo.completed) ||
         (filter === "INCOMPLETED" && !todo.completed) ||
         filter === "ALL";
-      const matchesSearch = todo.text
+      const matchesSearch = todo.title
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
       return matchesFilter && matchesSearch;
@@ -34,9 +33,7 @@ const TodoList = () => {
       {filteredTodos.length === 0 ? (
         <li className="text-center text-gray-500">No todos found</li>
       ) : (
-        filteredTodos.map((todo, index) => (
-          <TodoItem key={index} todo={todo} index={index} />
-        ))
+        filteredTodos.map((todo, index) => <TodoItem key={index} todo={todo} />)
       )}
     </ul>
   );

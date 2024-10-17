@@ -1,29 +1,25 @@
 "use client";
 
 import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
 import {
-  filterTodo,
+  filterTodos,
   markAllCompleted,
   markAllIncompleted,
-} from "@/redux/actions";
-import { AppDispatch } from "@/types/store";
+} from "@/redux/todoSlice";
 
 const FilterBtn = () => {
   const dispatch: AppDispatch = useDispatch();
-  const currentFilter = useSelector((state: any) => state.filter);
-
-  const filterHandler = (filter: string) => {
-    dispatch(filterTodo(filter));
-  };
+  const currentFilter = useSelector((state: RootState) => state.todos.filter);
 
   return (
     <div className="flex items-center gap-4">
       <select
         value={currentFilter}
-        onChange={(event) => filterHandler(event.target.value)}
+        onChange={(e) => dispatch(filterTodos(e.target.value))}
         className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:outline-none"
       >
-        <option value="ALL">Default</option>
+        <option value="ALL">All</option>
         <option value="COMPLETED">Completed</option>
         <option value="INCOMPLETED">Incompleted</option>
       </select>

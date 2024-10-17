@@ -1,7 +1,11 @@
-import { composeWithDevTools } from '@redux-devtools/extension';
-import { createStore } from 'redux';
-import todoReducer from './reducers';
+import { configureStore } from '@reduxjs/toolkit';
+import todoReducer from './todoSlice';
 
-const store = createStore(todoReducer, composeWithDevTools());
+export const store = configureStore({
+    reducer: {
+        todos: todoReducer,
+    },
+});
 
-export default store;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

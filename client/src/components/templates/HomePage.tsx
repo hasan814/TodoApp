@@ -1,9 +1,9 @@
 "use client";
 
-import { addTodo, updateSearchTerm } from "@/redux/actions";
+import { addTodo, updateSearchTerm } from "@/redux/todoSlice";
 import { BsPlus, BsSearch } from "react-icons/bs";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/types/store";
+import { AppDispatch } from "@/redux/store";
 import { useState } from "react";
 
 import FilterBtn from "../modules/FilterBtn";
@@ -11,18 +11,18 @@ import TodoList from "../modules/TodoList";
 
 const HomePage = () => {
   const dispatch: AppDispatch = useDispatch();
-
   const [newTodoTitle, setNewTodoTitle] = useState<string>("");
   const [newTodoDescription, setNewTodoDescription] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const addHandler = (title: string, description: string) => {
-    dispatch(addTodo(title, description));
-  };
-
   const addTodoHandler = () => {
     if (newTodoTitle.trim() !== "") {
-      addHandler(newTodoTitle.trim(), newTodoDescription.trim());
+      dispatch(
+        addTodo({
+          title: newTodoTitle.trim(),
+          description: newTodoDescription.trim(),
+        })
+      );
       setNewTodoTitle("");
       setNewTodoDescription("");
     }
@@ -35,11 +35,6 @@ const HomePage = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-4 sm:mt-8 p-4">
-      <h2 className="text-center text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-gray-800">
-        Personal Todo App
-      </h2>
-
-      {/* Todo input fields */}
       <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-4">
         <input
           type="text"
@@ -63,7 +58,6 @@ const HomePage = () => {
         </button>
       </div>
 
-      {/* Search and Filter components */}
       <div className="flex flex-wrap justify-between items-center gap-2 sm:gap-4 mb-6">
         <FilterBtn />
         <div className="flex items-center gap-2 w-full sm:w-auto">

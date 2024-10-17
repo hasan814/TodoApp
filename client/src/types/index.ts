@@ -1,4 +1,18 @@
-// types.ts or actionTypes.ts
+
+export interface Todo {
+    id: number;
+    title: string;
+    description: string;
+    completed: boolean;
+}
+
+export interface TodoState {
+    todos: Todo[];
+    filter: string;
+    searchTerm: string;
+}
+
+
 export interface TodoAction {
     type: string;
     payload?: {
@@ -10,9 +24,7 @@ export interface TodoAction {
 }
 
 
-export interface Todo {
-    id: number;
-    text: string;
-    description: string;
-    completed: boolean;
+export interface TodoItemProps {
+    todo: Todo;
 }
+

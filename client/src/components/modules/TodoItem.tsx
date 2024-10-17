@@ -1,14 +1,17 @@
 "use client";
 
+import { TodoItemProps } from "@/types";
 import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 import { useState } from "react";
+
 import {
-  makeCompleted,
-  makeIncompleted,
+  markCompleted,
+  markIncompleted,
   removeTodo,
   toggleTodo,
   updateTodo,
-} from "@/redux/actions";
+} from "@/redux/todoSlice";
 import {
   FaCheck,
   FaEdit,
@@ -18,19 +21,11 @@ import {
   FaToggleOn,
   FaTrash,
 } from "react-icons/fa";
-import { Todo } from "@/types";
-import { AppDispatch } from "@/types/store";
-
-interface TodoItemProps {
-  todo: Todo;
-  index: number;
-}
 
 const TodoItem = ({ todo }: TodoItemProps) => {
   const dispatch: AppDispatch = useDispatch();
-
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [updatedText, setUpdatedText] = useState<string>(todo.text);
+  const [updatedText, setUpdatedText] = useState<string>(todo.title);
   const [updatedDescription, setUpdatedDescription] = useState<string>(
     todo.description || ""
   );
@@ -38,7 +33,11 @@ const TodoItem = ({ todo }: TodoItemProps) => {
   const updateHandler = () => {
     if (updatedText.trim() !== "" && updatedDescription.trim() !== "") {
       dispatch(
-        updateTodo(todo.id, updatedText.trim(), updatedDescription.trim())
+        updateTodo({
+          id: todo.id,
+          updatedTitle: updatedText.trim(),
+          updatedDescription: updatedDescription.trim(),
+        })
       );
       setIsEditing(false);
     }
@@ -85,7 +84,7 @@ const TodoItem = ({ todo }: TodoItemProps) => {
                 todo.completed ? "line-through text-red-500" : ""
               }`}
             >
-              {todo.text}
+              {todo.title}
             </span>
             <span
               className={`text-sm ${
@@ -121,7 +120,7 @@ const TodoItem = ({ todo }: TodoItemProps) => {
             </button>
             {!todo.completed && (
               <button
-                onClick={() => dispatch(makeCompleted(todo.id))}
+                onClick={() => dispatch(markCompleted(todo.id))}
                 className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600"
               >
                 <FaCheck />
@@ -129,7 +128,7 @@ const TodoItem = ({ todo }: TodoItemProps) => {
             )}
             {todo.completed && (
               <button
-                onClick={() => dispatch(makeIncompleted(todo.id))}
+                onClick={() => dispatch(markIncompleted(todo.id))}
                 className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
               >
                 <FaTimes />
