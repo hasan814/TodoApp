@@ -1,4 +1,4 @@
-import { ADD_TODO, FILTER_TODOS, MAKE_COMPLETED, MAKE_INCOMPLETED, MARK_ALL_COMPLETED, REMOVE_TODO, TOGGLE_TODO, UPDATE_SEARCH_TERM } from "./actionTypes";
+import { ADD_TODO, FILTER_TODOS, MAKE_COMPLETED, MAKE_INCOMPLETED, MARK_ALL_COMPLETED, MARK_ALL_INCOMPLETED, REMOVE_TODO, TOGGLE_TODO, UPDATE_SEARCH_TERM, UPDATE_TODO } from "./actionTypes";
 
 const initialState = {
     todos: [],
@@ -11,19 +11,37 @@ const todoReducer = (state = initialState, action) => {
         case ADD_TODO:
             return {
                 ...state,
-                todos: [...state.todos, { text: action.payload.text, completed: false }]
+                todos: [
+                    ...state.todos,
+                    {
+                        id: action.payload.id,
+                        text: action.payload.title,
+                        description: action.payload.description,
+                        completed: false
+                    }
+                ]
             };
+        case UPDATE_TODO:
+            return {
+                ...state,
+                todos: state.todos.map((todo) =>
+                    todo.id === action.payload.id
+                        ? { ...todo, text: action.payload.updatedText, description: action.payload.updatedDescription }
+                        : todo
+                ),
+            };
+
         case TOGGLE_TODO:
             return {
                 ...state,
-                todos: state.todos.map((todo, index) =>
-                    index === action.payload.id ? { ...todo, completed: !todo.completed } : todo
-                )
+                todos: state.todos.map((todo) =>
+                    todo.id === action.payload.id ? { ...todo, completed: !todo.completed } : todo
+                ),
             };
         case REMOVE_TODO:
             return {
                 ...state,
-                todos: state.todos.filter((todo, index) => index !== action.payload.id)
+                todos: state.todos.filter((todo) => todo.id !== action.payload.id),
             };
         case MAKE_COMPLETED:
             return {
@@ -53,6 +71,11 @@ const todoReducer = (state = initialState, action) => {
             return {
                 ...state,
                 todos: state.todos.map((todo) => ({ ...todo, completed: true }))
+            };
+        case MARK_ALL_INCOMPLETED:
+            return {
+                ...state,
+                todos: state.todos.map((todo) => ({ ...todo, completed: false }))
             };
         default:
             return state;

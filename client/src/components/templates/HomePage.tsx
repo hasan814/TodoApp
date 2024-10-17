@@ -13,19 +13,21 @@ const HomePage = () => {
   const dispatch = useDispatch();
 
   // ============ State =============
-  const [newTodoText, setNewTodoText] = useState("");
+  const [newTodoTitle, setNewTodoTitle] = useState("");
+  const [newTodoDescription, setNewTodoDescription] = useState(""); // New state for description
   const [searchTerm, setSearchTerm] = useState("");
 
   // ============  Function =============
-  const addHandler = (text) => {
-    dispatch(addTodo(text));
+  const addHandler = (title, description) => {
+    dispatch(addTodo(title, description));
   };
 
   // ============ Add Function =============
   const addTodoHandler = () => {
-    if (newTodoText.trim() !== "") {
-      addHandler(newTodoText.trim());
-      setNewTodoText("");
+    if (newTodoTitle.trim() !== "") {
+      addHandler(newTodoTitle.trim(), newTodoDescription.trim());
+      setNewTodoTitle("");
+      setNewTodoDescription(""); // Clear the description field as well
     }
   };
 
@@ -41,13 +43,22 @@ const HomePage = () => {
       <h2 className="text-center text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-gray-800">
         Personal Todo App
       </h2>
+
+      {/* Todo input fields */}
       <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mb-4">
         <input
           type="text"
-          value={newTodoText}
-          placeholder="Add Todo"
-          onChange={(event) => setNewTodoText(event.target.value)}
+          value={newTodoTitle}
+          placeholder="Add Todo Title"
+          onChange={(event) => setNewTodoTitle(event.target.value)}
           className="flex-grow w-full sm:w-96 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:outline-none"
+        />
+        <input
+          type="text"
+          value={newTodoDescription}
+          placeholder="Add Todo Description" // New input for description
+          onChange={(event) => setNewTodoDescription(event.target.value)}
+          className="flex-grow w-full sm:w-96 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-indigo-200 focus:outline-none mt-2 sm:mt-0"
         />
         <button
           onClick={addTodoHandler}
@@ -56,6 +67,8 @@ const HomePage = () => {
           <BsPlus className="w-6 h-6 mx-auto" />
         </button>
       </div>
+
+      {/* Search and Filter components */}
       <div className="flex flex-wrap justify-between items-center gap-2 sm:gap-4 mb-6">
         <FilterBtn />
         <div className="flex items-center gap-2 w-full sm:w-auto">
@@ -71,6 +84,7 @@ const HomePage = () => {
           </button>
         </div>
       </div>
+
       <TodoList />
     </div>
   );
