@@ -1,19 +1,12 @@
 "use client";
 
+import { deleteTodo, toggleTodo, updateTodo } from "@/redux/todoSlice";
 import { TodoItemProps } from "@/types";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { useState } from "react";
 
 import {
-  markCompleted,
-  markIncompleted,
-  removeTodo,
-  toggleTodo,
-  updateTodo,
-} from "@/redux/todoSlice";
-import {
-  FaCheck,
   FaEdit,
   FaSave,
   FaTimes,
@@ -30,17 +23,30 @@ const TodoItem = ({ todo }: TodoItemProps) => {
     todo.description || ""
   );
 
+  // Handler to save the edited todo
   const updateHandler = () => {
     if (updatedText.trim() !== "" && updatedDescription.trim() !== "") {
       dispatch(
         updateTodo({
-          id: todo.id,
-          updatedTitle: updatedText.trim(),
-          updatedDescription: updatedDescription.trim(),
+          id: todo._id,
+          updatedTodo: {
+            title: updatedText.trim(),
+            description: updatedDescription.trim(),
+            completed: todo.completed,
+          },
         })
       );
-      setIsEditing(false);
+      setIsEditing(false); // Disable editing mode after updating
     }
+  };
+
+  const toggleHandler = () => {
+    dispatch(toggleTodo(todo._id));
+  };
+
+  // Handler to delete a todo item
+  const deleteHandler = () => {
+    dispatch(deleteTodo(todo._id));
   };
 
   return (
@@ -95,8 +101,9 @@ const TodoItem = ({ todo }: TodoItemProps) => {
             </span>
           </div>
           <div className="flex space-x-2">
+            {/* Toggle the completion status */}
             <button
-              onClick={() => dispatch(toggleTodo(todo.id))}
+              onClick={toggleHandler}
               className="p-2 bg-gray-200 rounded-full hover:bg-gray-300"
             >
               {todo.completed ? (
@@ -106,34 +113,21 @@ const TodoItem = ({ todo }: TodoItemProps) => {
               )}
             </button>
 
+            {/* Enable editing mode */}
             <button
               onClick={() => setIsEditing(true)}
               className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
             >
               <FaEdit />
             </button>
+
+            {/* Delete the todo item */}
             <button
-              onClick={() => dispatch(removeTodo(todo.id))}
+              onClick={deleteHandler}
               className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
             >
               <FaTrash />
             </button>
-            {!todo.completed && (
-              <button
-                onClick={() => dispatch(markCompleted(todo.id))}
-                className="p-2 bg-green-500 text-white rounded-full hover:bg-green-600"
-              >
-                <FaCheck />
-              </button>
-            )}
-            {todo.completed && (
-              <button
-                onClick={() => dispatch(markIncompleted(todo.id))}
-                className="p-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600"
-              >
-                <FaTimes />
-              </button>
-            )}
           </div>
         </div>
       )}

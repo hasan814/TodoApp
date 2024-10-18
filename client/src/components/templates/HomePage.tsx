@@ -1,14 +1,14 @@
 "use client";
 
-import { addTodo, updateSearchTerm } from "@/redux/todoSlice";
+import { addTodo, fetchTodos, updateSearchTerm } from "@/redux/todoSlice";
 import { BsPlus, BsSearch } from "react-icons/bs";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import { motion } from "framer-motion";
 
 import FilterBtn from "../modules/FilterBtn";
 import TodoList from "../modules/TodoList";
+import { AppDispatch } from "@/redux/store";
 
 const HomePage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -16,13 +16,14 @@ const HomePage = () => {
   const [newTodoDescription, setNewTodoDescription] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
+  useEffect(() => {
+    dispatch(fetchTodos());
+  }, [dispatch]);
+
   const addTodoHandler = () => {
-    if (newTodoTitle.trim() !== "") {
+    if (newTodoTitle.trim()) {
       dispatch(
-        addTodo({
-          title: newTodoTitle.trim(),
-          description: newTodoDescription.trim(),
-        })
+        addTodo({ title: newTodoTitle, description: newTodoDescription })
       );
       setNewTodoTitle("");
       setNewTodoDescription("");

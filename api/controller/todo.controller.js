@@ -46,3 +46,50 @@ export const deleteTodo = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
+// In your backend route (Express)
+export const toggleTodo = async (req, res) => {
+  try {
+    const todo = await Todo.findById(req.params.id);
+    if (!todo) {
+      return res.status(404).json({ message: "Todo not found" });
+    }
+    todo.completed = !todo.completed;
+    await todo.save();
+    res.json(todo);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Mark all todos as completed
+export const markAllCompleted = async (req, res) => {
+  try {
+    const updatedTodos = await Todo.updateMany(
+      { completed: false },
+      { $set: { completed: true } }
+    );
+
+    res.json({
+      message: `${updatedTodos.nModified} todos marked as completed`,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Mark all todos as incompleted
+export const markAllIncompleted = async (req, res) => {
+  try {
+    const updatedTodos = await Todo.updateMany(
+      { completed: true },
+      { $set: { completed: false } }
+    );
+
+    res.json({
+      message: `${updatedTodos.nModified} todos marked as incompleted`,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

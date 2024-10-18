@@ -1,83 +1,112 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Todo, TodoState } from '@/types';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
 
+// Async actions for interacting with the backend
+export const fetchTodos = createAsyncThunk('todos/fetchTodos', async () => {
+    const response = await axios.get('http://localhost:5000/api/todos');
+    return response.data;
+});
+
+export const addTodo = createAsyncThunk('todos/addTodo', async (newTodo: { title: string; description: string }) => {
+    const response = await axios.post('http://localhost:5000/api/todos', newTodo);
+    return response.data;
+});
+
+export const updateTodo = createAsyncThunk('todos/updateTodo', async ({ id, updatedTodo }: { id: string; updatedTodo: { title: string; description: string; completed: boolean } }) => {
+    const response = await axios.put(`http://localhost:5000/api/todos/${id}`, updatedTodo);
+    return response.data;
+});
+
+export const deleteTodo = createAsyncThunk('todos/deleteTodo', async (id: string) => {
+    await axios.delete(`http://localhost:5000/api/todos/${id}`);
+    return id;
+});
+
+// Define the toggleTodo action as a thunk
+export const toggleTodo = createAsyncThunk('todos/toggleTodo', async (id: string) => {
+    const response = await axios.patch(`http://localhost:5000/api/todos/${id}/toggle`);
+    return response.data;
+});
+
+// Async action to mark all todos as completed
+export const markAllCompleted = createAsyncThunk('todos/markAllCompleted', async () => {
+    const response = await axios.patch('http://localhost:5000/api/todos/markAllCompleted');
+    return response.data;
+});
+
+// Async action to mark all todos as incompleted
+export const markAllIncompleted = createAsyncThunk('todos/markAllIncompleted', async () => {
+    const response = await axios.patch('http://localhost:5000/api/todos/markAllIncompleted');
+    return response.data;
+});
+
+// Initial state
+interface Todo {
+    _id: string;
+    title: string;
+    description: string;
+    completed: boolean;
+}
+
+interface TodoState {
+    todos: Todo[];
+    filter: string;
+    searchTerm: string;
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+}
 
 const initialState: TodoState = {
     todos: [],
     filter: 'ALL',
     searchTerm: '',
+    status: 'idle',
 };
 
 const todoSlice = createSlice({
     name: 'todos',
     initialState,
     reducers: {
-        addTodo: (state, action: PayloadAction<{ title: string; description: string }>) => {
-            const newTodo: Todo = {
-                id: Date.now(),
-                title: action.payload.title,
-                description: action.payload.description,
-                completed: false,
-            };
-            state.todos.push(newTodo);
-        },
-        updateTodo: (
-            state,
-            action: PayloadAction<{ id: number; updatedTitle: string; updatedDescription: string }>
-        ) => {
-            const todo = state.todos.find((todo) => todo.id === action.payload.id);
-            if (todo) {
-                todo.title = action.payload.updatedTitle;
-                todo.description = action.payload.updatedDescription;
-            }
-        },
-        toggleTodo: (state, action: PayloadAction<number>) => {
-            const todo = state.todos.find((todo) => todo.id === action.payload);
-            if (todo) {
-                todo.completed = !todo.completed;
-            }
-        },
-        removeTodo: (state, action: PayloadAction<number>) => {
-            state.todos = state.todos.filter((todo) => todo.id !== action.payload);
-        },
-        markCompleted: (state, action: PayloadAction<number>) => {
-            const todo = state.todos.find((todo) => todo.id === action.payload);
-            if (todo) {
-                todo.completed = true;
-            }
-        },
-        markIncompleted: (state, action: PayloadAction<number>) => {
-            const todo = state.todos.find((todo) => todo.id === action.payload);
-            if (todo) {
-                todo.completed = false;
-            }
-        },
-        updateSearchTerm: (state, action: PayloadAction<string>) => {
+        updateSearchTerm: (state, action) => {
             state.searchTerm = action.payload;
         },
-        markAllCompleted: (state) => {
-            state.todos.forEach((todo) => (todo.completed = true));
-        },
-        markAllIncompleted: (state) => {
-            state.todos.forEach((todo) => (todo.completed = false));
-        },
-        filterTodos: (state, action: PayloadAction<string>) => {
+        filterTodos: (state, action) => {
             state.filter = action.payload;
         },
     },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchTodos.fulfilled, (state, action) => {
+                state.todos = action.payload;
+            })
+            .addCase(addTodo.fulfilled, (state, action) => {
+                state.todos.push(action.payload);
+            })
+            .addCase(updateTodo.fulfilled, (state, action) => {
+                const index = state.todos.findIndex(todo => todo._id === action.payload._id);
+                state.todos[index] = action.payload;
+            })
+            .addCase(deleteTodo.fulfilled, (state, action) => {
+                state.todos = state.todos.filter(todo => todo._id !== action.payload);
+            })
+            .addCase(toggleTodo.fulfilled, (state, action) => {
+                const index = state.todos.findIndex(todo => todo._id === action.payload._id);
+                if (index !== -1) {
+                    state.todos[index].completed = action.payload.completed;
+                }
+            })
+            .addCase(markAllCompleted.fulfilled, (state) => {
+                state.todos.forEach(todo => {
+                    todo.completed = true;
+                });
+            })
+            .addCase(markAllIncompleted.fulfilled, (state) => {
+                state.todos.forEach(todo => {
+                    todo.completed = false;
+                });
+            });
+    },
 });
 
-export const {
-    addTodo,
-    updateTodo,
-    toggleTodo,
-    removeTodo,
-    markCompleted,
-    markIncompleted,
-    updateSearchTerm,
-    markAllCompleted,
-    markAllIncompleted,
-    filterTodos,
-} = todoSlice.actions;
-
+// Export the new actions
+export const { updateSearchTerm, filterTodos } = todoSlice.actions;
 export default todoSlice.reducer;
