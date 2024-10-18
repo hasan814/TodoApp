@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteTodo, toggleTodo, updateTodo } from "@/redux/todoSlice";
+import { deleteTodo, toggleTodo, updateTodo } from "@/redux/actions";
 import { TodoItemProps } from "@/types";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";

@@ -1,15 +1,11 @@
 "use client";
 
+import { markAllCompleted, markAllIncompleted } from "@/redux/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
+import { filterTodos } from "@/redux/todoSlice";
 import { ChangeEvent } from "react";
 import { motion } from "framer-motion";
-
-import {
-  filterTodos,
-  markAllCompleted,
-  markAllIncompleted,
-} from "@/redux/todoSlice";
 
 const FilterBtn = () => {
   // ============= Dispatch ==============

@@ -1,7 +1,8 @@
 "use client";
 
-import { addTodo, fetchTodos, updateSearchTerm } from "@/redux/todoSlice";
 import { useState, ChangeEvent, useEffect } from "react";
+import { addTodo, fetchTodos } from "@/redux/actions";
+import { updateSearchTerm } from "@/redux/todoSlice";
 import { BsPlus, BsSearch } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
