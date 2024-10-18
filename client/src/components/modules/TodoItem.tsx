@@ -17,14 +17,17 @@ import {
 } from "react-icons/fa";
 
 const TodoItem = ({ todo }: TodoItemProps) => {
+  // ============== Dispatch =============
   const dispatch: AppDispatch = useDispatch();
+
+  // ============== Dispatch =============
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [updatedText, setUpdatedText] = useState<string>(todo.title);
   const [updatedDescription, setUpdatedDescription] = useState<string>(
     todo.description || ""
   );
 
-  // Handler to save the edited todo
+  // ============== Update Function =============
   const updateHandler = () => {
     if (updatedText.trim() !== "" && updatedDescription.trim() !== "") {
       dispatch(
@@ -40,12 +43,13 @@ const TodoItem = ({ todo }: TodoItemProps) => {
         .unwrap()
         .then(() => toast.success("Todo updated successfully!"))
         .catch(() => toast.error("Failed to update todo."));
-      setIsEditing(false); // Disable editing mode after updating
+      setIsEditing(false);
     } else {
       toast.error("Title and description cannot be empty.");
     }
   };
 
+  // ============== Toggle Function =============
   const toggleHandler = () => {
     dispatch(toggleTodo(todo._id))
       .unwrap()
@@ -57,7 +61,7 @@ const TodoItem = ({ todo }: TodoItemProps) => {
       .catch(() => toast.error("Failed to toggle todo."));
   };
 
-  // Handler to delete a todo item
+  // ============== Delete Function =============
   const deleteHandler = () => {
     dispatch(deleteTodo(todo._id))
       .unwrap()
@@ -65,6 +69,7 @@ const TodoItem = ({ todo }: TodoItemProps) => {
       .catch(() => toast.error("Failed to delete todo."));
   };
 
+  // ============== Rendering =============
   return (
     <li className="flex items-center justify-between p-4 bg-white rounded-md shadow-md">
       {isEditing ? (

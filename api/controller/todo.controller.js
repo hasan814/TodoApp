@@ -1,12 +1,12 @@
 import Todo from "../model/todo.model.js";
 
-// Get all todos
+// ================ Get all todos ==============
 export const getTodos = async (req, res) => {
   const todos = await Todo.find();
   res.json(todos);
 };
 
-// Create new todo
+// ================ Create new todo =============
 export const createTodo = async (req, res) => {
   const { title, description } = req.body;
   const newTodo = new Todo({
@@ -17,7 +17,7 @@ export const createTodo = async (req, res) => {
   res.status(201).json(newTodo);
 };
 
-// Update a todo
+// ============ Update a todo ===============
 export const updateTodo = async (req, res) => {
   const todo = await Todo.findById(req.params.id);
   if (!todo) {
@@ -32,7 +32,7 @@ export const updateTodo = async (req, res) => {
   res.json(todo);
 };
 
-// Delete a todo
+// ============= Delete a todo ===============
 export const deleteTodo = async (req, res) => {
   try {
     const todo = await Todo.findByIdAndDelete(req.params.id);
@@ -47,7 +47,7 @@ export const deleteTodo = async (req, res) => {
   }
 };
 
-// In your backend route (Express)
+// ============== Toggle =================
 export const toggleTodo = async (req, res) => {
   try {
     const todo = await Todo.findById(req.params.id);
@@ -62,7 +62,7 @@ export const toggleTodo = async (req, res) => {
   }
 };
 
-// Mark all todos as completed
+// ============== MarkAllComplete ================
 export const markAllCompleted = async (req, res) => {
   try {
     const updatedTodos = await Todo.updateMany(
@@ -78,7 +78,7 @@ export const markAllCompleted = async (req, res) => {
   }
 };
 
-// Mark all todos as incompleted
+// ============= Markincompleted =====================
 export const markAllIncompleted = async (req, res) => {
   try {
     const updatedTodos = await Todo.updateMany(

@@ -10,15 +10,15 @@ connectDB();
 
 const app = express();
 
-// Middleware
+// =========== Middleware ==============
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 
-// Routes
+// =========== Routes ================
 app.use("/api/todos", todoRoutes);
 
-// Start Server
+// ========== Start Server ===========
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

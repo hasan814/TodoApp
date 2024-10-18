@@ -12,15 +12,20 @@ import FilterBtn from "../modules/FilterBtn";
 import TodoList from "../modules/TodoList";
 
 const HomePage = () => {
+  // =============== Dispatch ===============
   const dispatch: AppDispatch = useDispatch();
+
+  // =============== State ===============
   const [newTodoTitle, setNewTodoTitle] = useState<string>("");
   const [newTodoDescription, setNewTodoDescription] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
 
+  // =============== Effect ===============
   useEffect(() => {
     dispatch(fetchTodos());
   }, [dispatch]);
 
+  // =============== Add Function ===============
   const addTodoHandler = () => {
     if (newTodoTitle.trim()) {
       dispatch(
@@ -31,12 +36,14 @@ const HomePage = () => {
     }
   };
 
+  // =============== Search Function ===============
   const searchHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchTerm(value);
     dispatch(updateSearchTerm(value));
   };
 
+  // =============== Rendering ===============
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 p-4">
       <Toaster />

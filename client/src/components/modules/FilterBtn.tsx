@@ -12,13 +12,18 @@ import {
 } from "@/redux/todoSlice";
 
 const FilterBtn = () => {
+  // ============= Dispatch ==============
   const dispatch: AppDispatch = useDispatch();
+
+  // ============= State ==============
   const currentFilter = useSelector((state: RootState) => state.todos.filter);
 
+  // ================ Filter Function ===============
   const handleFilterChange = (e: ChangeEvent<HTMLSelectElement>) => {
     dispatch(filterTodos(e.target.value));
   };
 
+  // ================ Rendering ===============
   return (
     <motion.div
       className="flex flex-col sm:flex-row items-center gap-4"

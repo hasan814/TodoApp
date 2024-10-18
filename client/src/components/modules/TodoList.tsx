@@ -3,8 +3,10 @@
 import { createSelector } from "reselect";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+
 import TodoItem from "./TodoItem";
 
+// ============= Prevent Rerendering =============
 const selectFilteredTodos = createSelector(
   [
     (state: RootState) => state.todos.todos,
@@ -25,6 +27,7 @@ const selectFilteredTodos = createSelector(
   }
 );
 
+// ============= Rerendering =============
 const TodoList = () => {
   const filteredTodos = useSelector(selectFilteredTodos);
 
