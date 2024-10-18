@@ -1,14 +1,15 @@
 "use client";
 
 import { addTodo, fetchTodos, updateSearchTerm } from "@/redux/todoSlice";
+import { useState, ChangeEvent, useEffect } from "react";
 import { BsPlus, BsSearch } from "react-icons/bs";
 import { useDispatch } from "react-redux";
-import { useState, ChangeEvent, useEffect } from "react";
+import { AppDispatch } from "@/redux/store";
+import { Toaster } from "react-hot-toast";
 import { motion } from "framer-motion";
 
 import FilterBtn from "../modules/FilterBtn";
 import TodoList from "../modules/TodoList";
-import { AppDispatch } from "@/redux/store";
 
 const HomePage = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -38,6 +39,7 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 p-4">
+      <Toaster />
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}

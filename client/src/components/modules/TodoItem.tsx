@@ -5,6 +5,7 @@ import { TodoItemProps } from "@/types";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { useState } from "react";
+import { toast } from "react-hot-toast";
 
 import {
   FaEdit,
@@ -35,18 +36,33 @@ const TodoItem = ({ todo }: TodoItemProps) => {
             completed: todo.completed,
           },
         })
-      );
+      )
+        .unwrap()
+        .then(() => toast.success("Todo updated successfully!"))
+        .catch(() => toast.error("Failed to update todo."));
       setIsEditing(false); // Disable editing mode after updating
+    } else {
+      toast.error("Title and description cannot be empty.");
     }
   };
 
   const toggleHandler = () => {
-    dispatch(toggleTodo(todo._id));
+    dispatch(toggleTodo(todo._id))
+      .unwrap()
+      .then(() =>
+        toast.success(
+          `Todo ${todo.completed ? "incompleted" : "completed"} successfully!`
+        )
+      )
+      .catch(() => toast.error("Failed to toggle todo."));
   };
 
   // Handler to delete a todo item
   const deleteHandler = () => {
-    dispatch(deleteTodo(todo._id));
+    dispatch(deleteTodo(todo._id))
+      .unwrap()
+      .then(() => toast.success("Todo deleted successfully!"))
+      .catch(() => toast.error("Failed to delete todo."));
   };
 
   return (
